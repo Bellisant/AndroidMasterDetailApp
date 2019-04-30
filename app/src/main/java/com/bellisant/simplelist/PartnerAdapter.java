@@ -41,7 +41,7 @@ public class PartnerAdapter extends ArrayAdapter<Partner> {
         TextView idView = listView.findViewById(R.id.id_view);
         TextView nameView = listView.findViewById(R.id.name_view);
 
-        idView.setText(partner.getId());
+        idView.setText(String.valueOf(partner.getId()));
         nameView.setText(partner.getName());
 
         return listView;
