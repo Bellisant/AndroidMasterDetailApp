@@ -1,8 +1,12 @@
 package com.bellisant.simplelist;
 
+import android.util.Log;
+
 import java.util.Arrays;
 
 public class Partner {
+    private static final String TAG = "Partner";
+
     private int id;
     private String name;
     private String description;
@@ -28,6 +32,8 @@ public class Partner {
 
     public void setName(String name) {
         this.name = name;
+        String msg = String.format("new Partner <%s> created", name);
+        Log.v(TAG, msg);
     }
 
     public String getDescription() {

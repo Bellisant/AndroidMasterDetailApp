@@ -1,6 +1,7 @@
 package com.bellisant.simplelist;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 import java.util.List;
 
 public class PartnerAdapter extends ArrayAdapter<Partner> {
+
+    private static final String TAG = "PartnerAdapter";
 
     public PartnerAdapter(Context context, List<Partner> partners) {
         super(context, 0, partners);
@@ -30,6 +33,8 @@ public class PartnerAdapter extends ArrayAdapter<Partner> {
                             false
                     );
         }
+
+        Log.v(TAG, "getView(): view for item " + position + "provided");
 
         Partner partner = getItem(position);
 

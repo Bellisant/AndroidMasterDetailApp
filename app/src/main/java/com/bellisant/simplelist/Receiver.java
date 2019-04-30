@@ -1,6 +1,7 @@
 package com.bellisant.simplelist;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,8 +14,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Receiver {
+    private static final String TAG = "Receiver";
 
     // helper for handling exceptions
     public List<Partner> fetchPartners(String url) {
@@ -22,12 +25,20 @@ public class Receiver {
         try {
             partners = fetchPartnersCollection(url);
         } catch (IOException e) {
+            Log.v(TAG, "fetchPartners(): IOException");
             e.printStackTrace();
         } catch (JSONException e) {
+            Log.v(TAG, "fetchPartners(): JSONException");
             e.printStackTrace();
         }
+        String msg = String.format(Locale.ENGLISH,
+                "fetchPartners(): %d partners fetched",
+                partners.size());
+        Log.v(TAG, msg);
+
         return partners;
     }
+
     // return collection of Partner objects from specified url
     private List<Partner> fetchPartnersCollection(String url) throws IOException, JSONException {
         ArrayList<Partner> allPartners = new ArrayList<>();
@@ -47,7 +58,8 @@ public class Receiver {
             JSONObject partnersCategory = arrayOfCategories.getJSONObject(i);
 
             // take array of json objects, representing partners
-            JSONArray partnersInCategory = partnersCategory.getJSONArray("partners");
+            JSONArray partnersInCategory =
+                    partnersCategory.getJSONArray("partners");
 
             // create model objects (Partner) from json objects
             // and put them in collection
@@ -62,7 +74,7 @@ public class Receiver {
                 partner.setUrl(partnerJSON.getString("url"));
                 partner.setType(partnerJSON.getString("type"));
 
-                // try to set place_id
+                // not all partners have "place_id" and "domain"
                 if (partnerJSON.has("place_id")) {
                     partner.setPlace_id(partnerJSON.getInt("place_id"));
                 }
