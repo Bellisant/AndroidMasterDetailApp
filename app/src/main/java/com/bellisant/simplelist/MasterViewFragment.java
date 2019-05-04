@@ -47,12 +47,9 @@ public class MasterViewFragment extends Fragment {
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent,
-                                    View view,
-                                    int position,
-                                    long id) {
-                Fragment detailViewFragment =
-                        DetailViewFragment.getNewDetailViewFragment(position);
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Fragment detailViewFragment = DetailViewFragment.getNewDetailViewFragment(position);
 
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 fm.beginTransaction()
@@ -72,11 +69,9 @@ public class MasterViewFragment extends Fragment {
 
     private void setAdapter() {
         Log.v(TAG, "setAdapter():");
+
         PartnerAdapter partnerAdapter =
-                new PartnerAdapter(
-                        getContext(),
-                        ((MainActivity)getActivity()).getPartners()
-                );
+                new PartnerAdapter(getContext(), ((MainActivity)getActivity()).getPartners());
 
         mListView.setAdapter(partnerAdapter);
     }

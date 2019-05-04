@@ -6,7 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -37,13 +40,55 @@ public class PartnerAdapter extends ArrayAdapter<Partner> {
         Log.v(TAG, "getView(): view for item " + position + "provided");
 
         Partner partner = getItem(position);
-
-        TextView idView = listView.findViewById(R.id.id_view);
         TextView nameView = listView.findViewById(R.id.name_view);
+        ImageView logoImageView = listView.findViewById(R.id.logo_imageView);
 
-        idView.setText(String.valueOf(partner.getId()));
-        nameView.setText(partner.getName());
+        setNameTextView(partner, nameView);
+        setLogoImageView(partner, logoImageView);
 
         return listView;
+    }
+
+    private void setNameTextView(Partner partner, TextView nameView) {
+        nameView.setText(partner.getName());
+    }
+
+    private void setLogoImageView(Partner partner, ImageView iv) {
+        final ImageView logoImageView = iv;
+        if (partner.getImage() != null) {
+
+            String msg =
+                    String.format("setLogoImageView(): loading image from %s" +
+                                    "for %s",
+                            partner.getImage(),
+                            partner.getName());
+            Log.v(TAG, msg);
+
+            Picasso.get()
+                    .load(partner.getImage())
+                    .fit()
+                    .placeholder(R.mipmap.ic_launcher)
+                    .into(logoImageView
+                            ,
+                            new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                    logoImageView.setVisibility(View.GONE);
+                                }
+                            }
+                            );
+        } else {
+            String msg =
+                    String.format("setLogoImageView(): no image for %s",
+                            partner.getName());
+            Log.v(TAG, msg);
+
+            logoImageView.setVisibility(View.GONE);
+        }
     }
 }

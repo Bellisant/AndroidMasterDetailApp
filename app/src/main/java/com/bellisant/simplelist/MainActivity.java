@@ -65,10 +65,14 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<Partner> items) {
+            // put fetched and created objects in collection within activity
             mPartners = items;
+
+            // go further with UI works
             attachMasterViewFragment();
-            Log.v(TAG,
-                    "onPostExecute(): pass fetched partners to  mPartners");
+
+            Log.v(TAG, "onPostExecute(): " +
+                            "pass fetched partners to mPartners");
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.bellisant.simplelist;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -81,6 +80,9 @@ public class Receiver {
                 if (partnerJSON.has("domain")) {
                     partner.setDomain(partnerJSON.getString("domain"));
                 }
+                if (partnerJSON.has("image")) {
+                    partner.setImage(partnerJSON.getString("image"));
+                }
                 allPartners.add(partner);
             }
         }
@@ -97,7 +99,7 @@ public class Receiver {
             if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 throw new IOException();
             }
-            int bytesRead = 0;
+            int bytesRead;
             byte[] buffer = new byte[1024];
             while ((bytesRead = in.read(buffer)) > 0) {
                 out.write(buffer, 0, bytesRead);
