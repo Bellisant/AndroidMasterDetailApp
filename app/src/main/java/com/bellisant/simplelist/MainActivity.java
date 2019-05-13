@@ -7,15 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    public static final String URL = "arctic2019.octopod.com/api/partners";
+    public static final String URL = "http://arctic2019.octopod.com/api/partners";
+
+    // collection of partner objects
     private List<Partner> mPartners;
 
     public Partner getPartner(int i) {
@@ -37,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Fragment which will be shown at app startup
+     */
     private void attachMasterViewFragment() {
         FragmentManager supportFragmentManager = getSupportFragmentManager();
         Fragment fragment = supportFragmentManager
@@ -52,6 +54,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Background task of downloading json data
+     * and creating list of {@link Partner} objects.
+     *
+     * Result will be passed to {@link MainActivity}
+     */
     private class ReceivePartnersTask
             extends AsyncTask<Void, Void, List<Partner>> {
 
@@ -60,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected List<Partner> doInBackground(Void... params) {
             Log.v(TAG, "doInBackground(): fetching from " + URL);
-            return new Receiver().fetchPartners(URL);
+            return Utils.fetchPartners(URL);
         }
 
         @Override
@@ -72,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             attachMasterViewFragment();
 
             Log.v(TAG, "onPostExecute(): " +
-                            "pass fetched partners to mPartners");
+                    "pass fetched partners to mPartners");
         }
     }
 }

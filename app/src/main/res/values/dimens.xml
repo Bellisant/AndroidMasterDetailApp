@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="list_item_height">88dp</dimen>
-    <dimen name="image_size">88dp</dimen>
+    <dimen name="icon_size_in_list">64dp</dimen>
+    <dimen name="icon_size_in_detail">128dp</dimen>
 </resources>

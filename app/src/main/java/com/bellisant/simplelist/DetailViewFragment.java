@@ -9,8 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 public class DetailViewFragment extends Fragment {
     private static final String TAG = "DetailViewFragment";
@@ -35,14 +37,24 @@ public class DetailViewFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_detail_view, container, false);
         mPartner = getPartnerByIndexFromArguments();
         setNameTextView(root);
-        setTypeTextView(root);
+        setUrlTextView(root);
         setDescriptionView(root);
+        setLogoView(root);
         return root;
     }
 
-    private void setTypeTextView(View view) {
-        TextView typeTextView = view.findViewById(R.id.detail_fragment_type_text_view);
-        typeTextView.setText(mPartner.getType());
+    private void setLogoView(View root) {
+        ImageView logo = root.findViewById(R.id.detail_logo);
+        Picasso.get()
+                .load(mPartner.getImage())
+                .fit()
+                .placeholder(R.mipmap.ic_launcher)
+                .into(logo);
+    }
+
+    private void setUrlTextView(View view) {
+        TextView urlTextView = view.findViewById(R.id.detail_fragment_url_text_view);
+        urlTextView.setText(mPartner.getDomain());
     }
 
     private void setNameTextView(View view) {

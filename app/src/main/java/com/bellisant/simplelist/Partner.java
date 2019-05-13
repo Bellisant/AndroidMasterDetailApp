@@ -48,6 +48,22 @@ public class Partner {
         return url;
     }
 
+    public String getBeautifiedUrl() {
+        if (url != null && !url.isEmpty()) {
+            String bUrl = "";
+            if (url.contains("http://")) {
+                bUrl = url.replace("http://", "");
+            }
+
+            int indexOfSlash = bUrl.indexOf("/");
+            if (indexOfSlash != -1) {
+                bUrl = bUrl.substring(0, indexOfSlash);
+            }
+            return bUrl;
+        }
+        return "";
+    }
+
     public void setUrl(String url) {
         this.url = url;
     }

@@ -22,19 +22,14 @@ public class PartnerAdapter extends ArrayAdapter<Partner> {
     }
 
     @Override
-    public View getView(int position,
-                        View convertView,
-                        ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
 
         // check if specified view was not reused then inflate it
         View listView = convertView;
         if (listView == null) {
-            listView = LayoutInflater.from(getContext())
-                    .inflate(
-                            R.layout.master_view_list_item,
-                            parent,
-                            false
-                    );
+            listView =
+                    LayoutInflater.from(getContext())
+                            .inflate(R.layout.master_view_list_item, parent, false);
         }
 
         Log.v(TAG, "getView(): view for item " + position + "provided");
@@ -54,12 +49,8 @@ public class PartnerAdapter extends ArrayAdapter<Partner> {
     }
 
     private void setLogoImageView(Partner partner, ImageView iv) {
-        final ImageView logoImageView = iv;
         if (partner.getImage() != null) {
-
-            String msg =
-                    String.format("setLogoImageView(): loading image from %s" +
-                                    "for %s",
+            String msg = String.format("setLogoImageView(): loading image from %s for %s",
                             partner.getImage(),
                             partner.getName());
             Log.v(TAG, msg);
@@ -68,27 +59,12 @@ public class PartnerAdapter extends ArrayAdapter<Partner> {
                     .load(partner.getImage())
                     .fit()
                     .placeholder(R.mipmap.ic_launcher)
-                    .into(logoImageView
-                            ,
-                            new com.squareup.picasso.Callback() {
-                                @Override
-                                public void onSuccess() {
-
-                                }
-
-                                @Override
-                                public void onError(Exception e) {
-                                    logoImageView.setVisibility(View.GONE);
-                                }
-                            }
-                            );
+                    .into(iv);
         } else {
-            String msg =
-                    String.format("setLogoImageView(): no image for %s",
-                            partner.getName());
+            String msg = String.format("setLogoImageView(): no image for %s", partner.getName());
             Log.v(TAG, msg);
-
-            logoImageView.setVisibility(View.GONE);
+            // set launcher icon if no image
+            iv.setImageResource(R.mipmap.ic_launcher_round);
         }
     }
 }
