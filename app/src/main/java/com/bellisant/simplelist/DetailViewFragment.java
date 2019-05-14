@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 public class DetailViewFragment extends Fragment {
@@ -45,11 +47,14 @@ public class DetailViewFragment extends Fragment {
 
     private void setLogoView(View root) {
         ImageView logo = root.findViewById(R.id.detail_logo);
-        Picasso.get()
+        Picasso.Builder builder = new Picasso.Builder(getContext());
+        builder.downloader(new OkHttp3Downloader(getContext()));
+        builder.build()
                 .load(mPartner.getImage())
+//                .networkPolicy(NetworkPolicy.NO_STORE)
                 .fit()
-                .placeholder(R.mipmap.ic_launcher)
                 .into(logo);
+
     }
 
     private void setUrlTextView(View view) {

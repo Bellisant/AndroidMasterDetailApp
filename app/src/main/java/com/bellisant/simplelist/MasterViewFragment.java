@@ -1,33 +1,28 @@
 package com.bellisant.simplelist;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import org.json.JSONException;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.List;
 
 public class MasterViewFragment extends Fragment {
     private static final String TAG = "MasterViewFragment";
 
-    private ListView mListView;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
+    private RecyclerView mRecyclerView;
+    private RecyclerPartnerAdapter mRecyclerPartnerAdapter;
 
     @Nullable
     @Override
@@ -35,46 +30,85 @@ public class MasterViewFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(
-                R.layout.fragment_master_view,
-                container,
-                false);
+        // inflate root view
+        View view = inflater.inflate(R.layout.fragment_master_view_recycler, container, false);
 
-        mListView = view.findViewById(R.id.list);
-        Log.v(TAG, "onCreateView(): get reference to listView");
+        // get RecyclerView
+        mRecyclerView = view.findViewById(R.id.recycler_view);
 
-        setAdapter();
+        // set layout manager
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        // create adapter for list
+        List<Partner> partners = ((MainActivity) getActivity()).getPartners();
+        mRecyclerPartnerAdapter = new RecyclerPartnerAdapter(partners);
 
-                Fragment detailViewFragment = DetailViewFragment.getNewDetailViewFragment(position);
-
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                fm.beginTransaction()
-                        .replace(R.id.place_fragment_here, detailViewFragment)
-                        .addToBackStack(null)
-                        .commit();
-            }
-        });
+        // set adapter to list
+        mRecyclerView.setAdapter(mRecyclerPartnerAdapter);
 
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    class RecyclerPartnerAdapter extends RecyclerView.Adapter<PartnerHolder> {
+        private final List<Partner> mPartners;
+
+        RecyclerPartnerAdapter(List<Partner> partners) {
+            mPartners = partners;
+        }
+
+        @NonNull
+        @Override
+        public PartnerHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+            View view = LayoutInflater.from(getActivity())
+                    .inflate(R.layout.master_view_list_item, viewGroup, false);
+            return new PartnerHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull PartnerHolder partnerHolder, int position) {
+            partnerHolder.bindTo(mPartners.get(position), position);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mPartners.size();
+        }
     }
 
-    private void setAdapter() {
-        Log.v(TAG, "setAdapter():");
+    class PartnerHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        PartnerAdapter partnerAdapter =
-                new PartnerAdapter(getContext(), ((MainActivity)getActivity()).getPartners());
+        private TextView mTextView;
+        private ImageView mLogo;
+        private int position;
 
-        mListView.setAdapter(partnerAdapter);
+        PartnerHolder(@NonNull final View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(this);
+            mTextView = itemView.findViewById(R.id.name_view);
+            mLogo = itemView.findViewById(R.id.logo_imageView);
+        }
+
+        void bindTo(Partner partner, int position) {
+            this.position = position;
+
+            Picasso.Builder builder = new Picasso.Builder(getContext());
+            builder.downloader(new OkHttp3Downloader(getContext()));
+            builder.build()
+                    .load(partner.getImage())
+//                    .networkPolicy(NetworkPolicy.NO_STORE)
+                    .fit()
+                    .into(mLogo);
+
+            mTextView.setText(partner.getName());
+        }
+
+        @Override
+        public void onClick(View v) {
+            ((MainActivity) getActivity()).onPartnerItemClick(this.position);
+        }
     }
 
-
+    interface PartnerItemClicker {
+        void onPartnerItemClick(int position);
+    }
 }
